@@ -1,0 +1,26 @@
+{ "name" : "node-cuda"
+, "description" : "NVIDIA CUDA™ bindings for Node.js"
+, "keywords" : [ "NVIDIA", "CUDA"]
+, "version" : "0.0.1"
+, "homepage" : "http://github.com/kashif/node-cuda"
+, "author" : "Kashif Rasul <kashif@nomad-labs.com> (http://hpc.nomad-labs.com)"
+, "repository" :
+  { "type" : "git"
+  , "url" : "git://github.com/kashif/node-cuda.git"
+  }
+, "bugs" :
+  {
+    "web" : "http://github.com/kashif/node-cuda/issues"
+  }
+, "directories" :
+  {
+    "lib" : "./lib"
+  }
+, "main" : "cuda"
+, "engines" : { "node" : "0.4" }
+, "licenses" :
+  [ { "type" : "MIT"
+    , "url" : "http://github.com/kashif/node-cuda/raw/master/LICENSE"
+    }
+  ]
+}
