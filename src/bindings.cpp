@@ -3,5 +3,6 @@
 
 extern "C"
 void init (Handle<Object> target) {
-    CudaDevice::Initialize(target);
+  HandleScope scope;
+  CudaDevice::Initialize(target);
 }
