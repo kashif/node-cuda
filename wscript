@@ -1,6 +1,4 @@
 import Options
-from os import unlink, symlink, system
-from os.path import exists, abspath
 
 srcdir = "."
 blddir = "build"
@@ -22,6 +20,6 @@ def configure(conf):
 
 def build(bld):
     obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
-    obj.target = "cuda"
+    obj.target = "binding"
     obj.source = "src/bindings.cpp src/cuda_device.cpp"
     obj.uselib = "CUDA"
