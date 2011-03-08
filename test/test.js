@@ -1,11 +1,14 @@
 var cu = require(__dirname + '/../build/default/binding');
 
-var driverVersion = cu.DriverGetVersion(); //cuDriverGetVersion()
+//cuDriverGetVersion()
+var driverVersion = cu.DriverGetVersion();
 console.log("Driver version: " + driverVersion);
 
-var count = cu.DeviceGetCount(); //cuDeviceGetCount
+//cuDeviceGetCount
+var count = cu.DeviceGetCount();
 console.log("Device count: " + count);
 
-
-var device = new cu.CudaDevice();
-//var device = new cu.DeviceGet(0); //cuDeviceGet(0)
+//cuDeviceGet
+var cuDevice = new cu.CudaDevice(0);
+//cuDeviceGetName
+console.log("Device name: " + cuDevice.GetName());
