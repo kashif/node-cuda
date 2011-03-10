@@ -12,3 +12,4 @@ console.log("Device count: " + count);
 var cuDevice = new cu.CudaDevice(0);
 //cuDeviceGetName
 console.log("Device name: " + cuDevice.GetName());
+console.log("Device total mem: " + cuDevice.TotalMem())

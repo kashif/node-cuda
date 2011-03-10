@@ -16,6 +16,7 @@ void CudaDevice::Initialize (Handle<Object> target) {
   constructor_template->SetClassName(String::NewSymbol("CudaDevice"));
 
   NODE_SET_PROTOTYPE_METHOD(constructor_template, "GetName", CudaDevice::getName);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "TotalMem", CudaDevice::totalMem);
 
   target->Set(String::NewSymbol("CudaDevice"), constructor_template->GetFunction());
 }
@@ -54,4 +55,14 @@ Handle<Value> CudaDevice::getName(const Arguments& args) {
 
   Local<String> result = String::New(deviceName);
   return scope.Close(result);
+}
+
+Handle<Value> CudaDevice::totalMem(const Arguments& args) {
+  HandleScope scope;
+
+  CudaDevice *cu = ObjectWrap::Unwrap<CudaDevice>(args.Holder());
+  size_t totalGlobalMem;
+  cuDeviceTotalMem(&totalGlobalMem, cu->m_device);
+  
+  return scope.Close(Number::New(totalGlobalMem));
 }
