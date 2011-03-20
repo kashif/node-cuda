@@ -15,6 +15,7 @@ protected:
   static Handle<Value> driverGetVersion(const Arguments& args);
   static Handle<Value> deviceGetCount(const Arguments& args);
   static Handle<Value> getName(const Arguments& args);
+  static Handle<Value> computeCapability(const Arguments& args);
   static Handle<Value> totalMem(const Arguments& args);
 
   CudaDevice() : EventEmitter () {
