@@ -17,9 +17,11 @@ protected:
   static Handle<Value> getName(const Arguments& args);
   static Handle<Value> computeCapability(const Arguments& args);
   static Handle<Value> totalMem(const Arguments& args);
+  static Handle<Value> ctxCreate(const Arguments& args);
 
   CudaDevice() : EventEmitter () {
     m_device = NULL;
+    m_context = NULL;
   }
 
   ~CudaDevice(){
@@ -27,6 +29,7 @@ protected:
 
 private:
   CUdevice m_device;
+  CUcontext m_context;
 };
 
 #endif
