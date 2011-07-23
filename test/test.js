@@ -22,6 +22,13 @@ console.log("Device compute capability: major=" + compute[0] + " minor=" + compu
 //cuCtxCreate
 var cuCtx = new cu.CudaCtx(0, cuDevice);
 
+//cuCtxSynchronize
+var error = cuCtx.Synchronize();
+console.log("Context synchronize with error code: " + error);
+
+//cuCtxGetApiVersion
+console.log("Context API version: " + cuCtx.GetApiVersion());
+
 //cuCtxDestroy
-var error = cuCtx.Destroy();
+error = cuCtx.Destroy();
 console.log("Context destroyed with error code: " + error);

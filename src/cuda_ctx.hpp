@@ -13,7 +13,13 @@ protected:
   static Persistent<FunctionTemplate> constructor_template;
   static Handle<Value> New(const Arguments& args);
   static Handle<Value> destroy(const Arguments& args);
-  
+  static Handle<Value> pushCurrent(const Arguments& args);
+  static Handle<Value> popCurrent(const Arguments& args);
+  static Handle<Value> setCurrent(const Arguments& args);
+  static Handle<Value> getCurrent(const Arguments& args);
+  static Handle<Value> synchronize(const Arguments& args);
+  static Handle<Value> getApiVersion(const Arguments& args);
+
   CudaCtx () : EventEmitter () {
     m_context = NULL;
   }
