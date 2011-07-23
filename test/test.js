@@ -20,5 +20,8 @@ var compute = cuDevice.ComputeCapability();
 console.log("Device compute capability: major=" + compute[0] + " minor=" + compute[1]);
 
 //cuCtxCreate
-var error = cuDevice.CtxCreate();
-console.log("Ctx created with error code: " + error);
+var cuCtx = new cu.CudaCtx(0, cuDevice);
+
+//cuCtxDestroy
+var error = cuCtx.Destroy();
+console.log("Context destroyed with error code: " + error);
