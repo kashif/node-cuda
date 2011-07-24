@@ -66,8 +66,8 @@ Handle<Value> CudaDevice::computeCapability(const Arguments& args) {
   cuDeviceComputeCapability(&major, &minor, cu->m_device);
   
   Local<Array> result = Array::New(2);
-  result->Set(Integer::New(0), Integer::New(major));
-  result->Set(Integer::New(1), Integer::New(minor));
+  result->Set(0, Integer::New(major));
+  result->Set(1, Integer::New(minor));
   return scope.Close(result);
 }
 

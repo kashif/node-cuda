@@ -7,8 +7,9 @@
 class CudaDevice : public EventEmitter {
 public:
   static void Initialize (Handle<Object> target);
-  
+
   CUdevice m_device;
+
 protected:
   static Persistent<FunctionTemplate> constructor_template;
 
