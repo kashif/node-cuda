@@ -29,6 +29,21 @@ console.log("Context synchronize with error code: " + error);
 //cuCtxGetApiVersion
 console.log("Context API version: " + cuCtx.GetApiVersion());
 
+
+//cuMemAlloc
+var cuMem = new cu.CudaMem();
+error = cuMem.Alloc(100);
+console.log("Cuda Mem Alloc with error code: " + error);
+
+//cuMemFree
+error = cuMem.Free();
+console.log("Cuda Mem Free with error code: " + error);
+
+//cuMemAllocPitch
+var pitch = cuMem.AllocPitch(100, 100, 8);
+console.log("Cuda Mem pitch of allocation in bytes: " + pitch);
+cuMem.Free();
+
 //cuCtxDestroy
 error = cuCtx.Destroy();
 console.log("Context destroyed with error code: " + error);
