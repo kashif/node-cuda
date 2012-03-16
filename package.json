@@ -17,7 +17,7 @@
     "lib" : "./lib"
   }
 , "main" : "cuda"
-, "engines" : { "node" : "0.4" }
+, "engines" : { "node" : ">= 0.6.0" }
 , "licenses" :
   [ { "type" : "MIT"
     , "url" : "http://github.com/kashif/node-cuda/raw/master/LICENSE"

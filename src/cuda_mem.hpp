@@ -4,7 +4,7 @@
 #include <cuda.h>
 #include "bindings.hpp"
 
-class CudaMem : public EventEmitter {
+class CudaMem : public ObjectWrap {
 public:
   static Persistent<FunctionTemplate> constructor_template;
   static void Initialize (Handle<Object> target);
@@ -15,7 +15,7 @@ public:
 
   CUdeviceptr m_devicePtr;
 protected:
-  CudaMem () : EventEmitter () {
+  CudaMem () : ObjectWrap () {
     m_devicePtr = 0;
   }
   ~CudaMem (){}

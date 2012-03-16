@@ -11,15 +11,14 @@ def configure(conf):
   conf.check_tool("compiler_cxx")
   conf.check_tool("node_addon")
 
-  if not conf.check_cfg(package='cuda', uselib_store='CUDA'):
-    if not conf.check(lib="cuda",
-                      libpath=['/usr/local/cuda/lib'],
-                      includes=['/usr/local/cuda/include'],
-                      uselib_store="CUDA"):
-      conf.fatal('Cannot find CUDA library.');
+  if not conf.check(lib="cuda",
+                    libpath=['/usr/local/cuda/lib'],
+                    includes=['/usr/local/cuda/include'],
+                    uselib_store="CUDA"):
+    conf.fatal('Cannot find CUDA library.');
 
 def build(bld):
     obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
-    obj.target = "binding"
+    obj.target = "cuda"
     obj.source = "src/bindings.cpp src/cuda_device.cpp src/cuda_ctx.cpp src/cuda_mem.cpp"
     obj.uselib = "CUDA"

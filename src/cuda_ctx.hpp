@@ -4,7 +4,7 @@
 #include <cuda.h>
 #include "bindings.hpp"
 
-class CudaCtx : public EventEmitter
+class CudaCtx : public ObjectWrap
 {
 public:
   static void Initialize (Handle<Object> target);
@@ -20,7 +20,7 @@ protected:
   static Handle<Value> synchronize(const Arguments& args);
   static Handle<Value> getApiVersion(const Arguments& args);
 
-  CudaCtx () : EventEmitter () {
+  CudaCtx () : ObjectWrap () {
     m_context = NULL;
   }
   ~CudaCtx (){}

@@ -1,4 +1,4 @@
-var cu = require(__dirname + '/../build/default/binding');
+var cu = require(__dirname + '/../build/Release/cuda');
 
 //cuDriverGetVersion()
 var driverVersion = cu.DriverGetVersion();

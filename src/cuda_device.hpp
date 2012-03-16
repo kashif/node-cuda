@@ -4,7 +4,7 @@
 #include <cuda.h>
 #include "bindings.hpp"
 
-class CudaDevice : public EventEmitter {
+class CudaDevice : public ObjectWrap {
 public:
   static void Initialize (Handle<Object> target);
 
@@ -20,7 +20,7 @@ protected:
   static Handle<Value> computeCapability(const Arguments& args);
   static Handle<Value> totalMem(const Arguments& args);
 
-  CudaDevice() : EventEmitter () {
+  CudaDevice() : ObjectWrap () {
     m_device = NULL;
   }
 
