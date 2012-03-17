@@ -50,7 +50,7 @@ Handle<Value> CudaDevice::New(const Arguments& args) {
 Handle<Value> CudaDevice::getName(const Arguments& args) {
   HandleScope scope;
 
-  CudaDevice *cu = ObjectWrap::Unwrap<CudaDevice>(args.Holder());
+  CudaDevice *cu = ObjectWrap::Unwrap<CudaDevice>(args.This());
   char deviceName[256];
   cuDeviceGetName(deviceName, 256, cu->m_device);
 
@@ -61,7 +61,7 @@ Handle<Value> CudaDevice::getName(const Arguments& args) {
 Handle<Value> CudaDevice::computeCapability(const Arguments& args) {
   HandleScope scope;
 
-  CudaDevice *cu = ObjectWrap::Unwrap<CudaDevice>(args.Holder());
+  CudaDevice *cu = ObjectWrap::Unwrap<CudaDevice>(args.This());
   int major = 0, minor = 0;
   cuDeviceComputeCapability(&major, &minor, cu->m_device);
   
@@ -74,7 +74,7 @@ Handle<Value> CudaDevice::computeCapability(const Arguments& args) {
 Handle<Value> CudaDevice::totalMem(const Arguments& args) {
   HandleScope scope;
 
-  CudaDevice *cu = ObjectWrap::Unwrap<CudaDevice>(args.Holder());
+  CudaDevice *cu = ObjectWrap::Unwrap<CudaDevice>(args.This());
   size_t totalGlobalMem;
   cuDeviceTotalMem(&totalGlobalMem, cu->m_device);
   

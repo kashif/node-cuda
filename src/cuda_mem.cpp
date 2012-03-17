@@ -21,14 +21,14 @@ Handle<Value> CudaMem::New(const Arguments& args) {
   HandleScope scope;
 
   CudaMem *cuptr = new CudaMem();
-  cuptr->Wrap(args.Holder());
+  cuptr->Wrap(args.This());
 
   return args.This();
 }
 
 Handle<Value> CudaMem::alloc(const Arguments& args) {
   HandleScope scope;
-  CudaMem *cuptr = ObjectWrap::Unwrap<CudaMem>(args.Holder());
+  CudaMem *cuptr = ObjectWrap::Unwrap<CudaMem>(args.This());
 
   size_t bytesize = args[0]->Uint32Value();
   CUresult error = cuMemAlloc(&(cuptr->m_devicePtr), bytesize);
@@ -38,7 +38,7 @@ Handle<Value> CudaMem::alloc(const Arguments& args) {
 
 Handle<Value> CudaMem::allocPitch(const Arguments& args) {
   HandleScope scope;
-  CudaMem *cuptr = ObjectWrap::Unwrap<CudaMem>(args.Holder());
+  CudaMem *cuptr = ObjectWrap::Unwrap<CudaMem>(args.This());
 
   size_t bytesize = args[0]->Uint32Value();
   size_t pPitch;
@@ -52,7 +52,7 @@ Handle<Value> CudaMem::allocPitch(const Arguments& args) {
 
 Handle<Value> CudaMem::free(const Arguments& args) {
   HandleScope scope;
-  CudaMem *cuptr = ObjectWrap::Unwrap<CudaMem>(args.Holder());
+  CudaMem *cuptr = ObjectWrap::Unwrap<CudaMem>(args.This());
 
   CUresult error = cuMemFree(cuptr->m_devicePtr);
 

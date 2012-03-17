@@ -26,7 +26,7 @@ Handle<Value> CudaCtx::New(const Arguments& args) {
   HandleScope scope;
   
   CudaCtx *pctx = new CudaCtx();
-  pctx->Wrap(args.Holder());
+  pctx->Wrap(args.This());
   
   unsigned int flags = args[0]->Uint32Value();
   CudaDevice *pdev = ObjectWrap::Unwrap<CudaDevice>(args[1]->ToObject());
@@ -37,7 +37,7 @@ Handle<Value> CudaCtx::New(const Arguments& args) {
 
 Handle<Value> CudaCtx::destroy(const Arguments& args) {
   HandleScope scope;
-  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.Holder());
+  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.This());
 
   CUresult error = cuCtxDestroy(pctx->m_context);
   return scope.Close(Number::New(error));
@@ -45,7 +45,7 @@ Handle<Value> CudaCtx::destroy(const Arguments& args) {
 
 Handle<Value> CudaCtx::pushCurrent(const Arguments& args) {
   HandleScope scope;
-  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.Holder());
+  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.This());
 
   CUresult error = cuCtxPushCurrent(pctx->m_context);
   return scope.Close(Number::New(error));
@@ -53,7 +53,7 @@ Handle<Value> CudaCtx::pushCurrent(const Arguments& args) {
 
 Handle<Value> CudaCtx::popCurrent(const Arguments& args) {
   HandleScope scope;
-  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.Holder());
+  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.This());
 
   CUresult error = cuCtxPopCurrent(&(pctx->m_context));
   return scope.Close(Number::New(error));
@@ -61,7 +61,7 @@ Handle<Value> CudaCtx::popCurrent(const Arguments& args) {
 
 Handle<Value> CudaCtx::setCurrent(const Arguments& args) {
   HandleScope scope;
-  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.Holder());
+  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.This());
 
   CUresult error = cuCtxSetCurrent(pctx->m_context);
   return scope.Close(Number::New(error));
@@ -69,7 +69,7 @@ Handle<Value> CudaCtx::setCurrent(const Arguments& args) {
 
 Handle<Value> CudaCtx::getCurrent(const Arguments& args) {
   HandleScope scope;
-  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.Holder());
+  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.This());
 
   CUresult error = cuCtxGetCurrent(&(pctx->m_context));
   return scope.Close(Number::New(error));
@@ -84,7 +84,7 @@ Handle<Value> CudaCtx::synchronize(const Arguments& args) {
 
 Handle<Value> CudaCtx::getApiVersion(const Arguments& args) {
   HandleScope scope;
-  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.Holder());
+  CudaCtx *pctx = ObjectWrap::Unwrap<CudaCtx>(args.This());
 
   unsigned int version;
   CUresult error = cuCtxGetApiVersion(pctx->m_context, &version);
