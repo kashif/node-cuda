@@ -12,7 +12,7 @@ def configure(conf):
   conf.check_tool("node_addon")
 
   if not conf.check(lib="cuda",
-                    libpath=['/usr/local/cuda/lib'],
+                    libpath=['/usr/local/cuda/lib', '/usr/lib64/nvidia-graphics-current'],
                     includes=['/usr/local/cuda/include'],
                     uselib_store="CUDA"):
     conf.fatal('Cannot find CUDA library.');

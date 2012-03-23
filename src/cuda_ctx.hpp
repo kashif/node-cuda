@@ -4,13 +4,13 @@
 #include <cuda.h>
 #include "bindings.hpp"
 
-class CudaCtx : public ObjectWrap
-{
+class CudaCtx : public ObjectWrap {
 public:
-  static void Initialize (Handle<Object> target);
+  static void Initialize(Handle<Object> target);
   
 protected:
   static Persistent<FunctionTemplate> constructor_template;
+  
   static Handle<Value> New(const Arguments& args);
   static Handle<Value> destroy(const Arguments& args);
   static Handle<Value> pushCurrent(const Arguments& args);
@@ -20,10 +20,9 @@ protected:
   static Handle<Value> synchronize(const Arguments& args);
   static Handle<Value> getApiVersion(const Arguments& args);
 
-  CudaCtx () : ObjectWrap () {
-    m_context = NULL;
-  }
-  ~CudaCtx (){}
+  CudaCtx() : ObjectWrap(), m_context(NULL) {}
+  
+  ~CudaCtx () {}
 
 private:
   CUcontext m_context;

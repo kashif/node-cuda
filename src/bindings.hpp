@@ -7,4 +7,7 @@
 using namespace v8;
 using namespace node;
 
+static Handle<Value> driverGetVersion(const Arguments& args);
+static Handle<Value> deviceGetCount(const Arguments& args);
+
 #endif
