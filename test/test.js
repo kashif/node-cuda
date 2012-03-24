@@ -8,19 +8,16 @@ console.log("Driver version: " + driverVersion);
 var count = cu.DeviceGetCount();
 console.log("Device count: " + count);
 
-//cuDeviceGet
-var cuDevice = new cu.CudaDevice(0);
+for (var i=0; i<count; i++) {
+  //cuDeviceGet
+  var cuDevice = new cu.Device(i);
 
-//cuDeviceGetName
-console.log("Device name: " + cuDevice.GetName());
-console.log("Device total mem: " + cuDevice.TotalMem())
-
-//cuDeviceComputeCapability
-var compute = cuDevice.ComputeCapability();
-console.log("Device compute capability: major=" + compute[0] + " minor=" + compute[1]);
+  //cuDeviceGetName
+  console.log("Device " + i + ":", cuDevice);
+}
 
 //cuCtxCreate
-var cuCtx = new cu.CudaCtx(0, cuDevice);
+var cuCtx = new cu.Ctx(0, cuDevice);
 
 //cuCtxSynchronize
 var error = cuCtx.Synchronize();
@@ -31,17 +28,17 @@ console.log("Context API version: " + cuCtx.GetApiVersion());
 
 
 //cuMemAlloc
-var cuMem = new cu.CudaMem();
+var cuMem = new cu.Mem();
 error = cuMem.Alloc(100);
-console.log("Cuda Mem Alloc with error code: " + error);
+console.log("Mem Alloc with error code: " + error);
 
 //cuMemFree
 error = cuMem.Free();
-console.log("Cuda Mem Free with error code: " + error);
+console.log("Mem Free with error code: " + error);
 
 //cuMemAllocPitch
 var pitch = cuMem.AllocPitch(100, 100, 8);
-console.log("Cuda Mem pitch of allocation in bytes: " + pitch);
+console.log("Mem pitch of allocation in bytes: " + pitch);
 cuMem.Free();
 
 //cuCtxDestroy

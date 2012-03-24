@@ -1,7 +1,7 @@
 #include "bindings.hpp"
-#include "cuda_device.hpp"
-#include "cuda_ctx.hpp"
-#include "cuda_mem.hpp"
+#include "device.hpp"
+#include "ctx.hpp"
+#include "mem.hpp"
 
 void init (Handle<Object> target) {
   HandleScope scope;
@@ -14,9 +14,9 @@ void init (Handle<Object> target) {
   NODE_SET_METHOD(target, "DeviceGetCount", deviceGetCount);
 
   // Initialize driver api bindings
-  CudaDevice::Initialize(target);
-  CudaCtx::Initialize(target);
-  CudaMem::Initialize(target);
+  Device::Initialize(target);
+  Ctx::Initialize(target);
+  Mem::Initialize(target);
 }
 
 Handle<Value> driverGetVersion(const Arguments& args) {

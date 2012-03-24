@@ -1,10 +1,10 @@
-#ifndef CUDA_CTX_HPP
-#define CUDA_CTX_HPP
+#ifndef CTX_HPP
+#define CTX_HPP
 
 #include <cuda.h>
 #include "bindings.hpp"
 
-class CudaCtx : public ObjectWrap {
+class Ctx : public ObjectWrap {
 public:
   static void Initialize(Handle<Object> target);
   
@@ -20,9 +20,9 @@ protected:
   static Handle<Value> synchronize(const Arguments& args);
   static Handle<Value> getApiVersion(const Arguments& args);
 
-  CudaCtx() : ObjectWrap(), m_context(NULL) {}
+  Ctx() : ObjectWrap(), m_context(NULL) {}
   
-  ~CudaCtx () {}
+  ~Ctx () {}
 
 private:
   CUcontext m_context;

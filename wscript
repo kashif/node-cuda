@@ -20,5 +20,5 @@ def configure(conf):
 def build(bld):
     obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
     obj.target = "cuda"
-    obj.source = "src/bindings.cpp src/cuda_device.cpp src/cuda_ctx.cpp src/cuda_mem.cpp"
+    obj.source = "src/bindings.cpp src/device.cpp src/ctx.cpp src/mem.cpp"
     obj.uselib = "CUDA"
