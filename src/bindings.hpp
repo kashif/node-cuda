@@ -7,7 +7,7 @@
 using namespace v8;
 using namespace node;
 
-static Handle<Value> driverGetVersion(const Arguments& args);
-static Handle<Value> deviceGetCount(const Arguments& args);
+static Handle<Value> GetDriverVersion(Local<String> property, const AccessorInfo &info);
+static Handle<Value> GetDeviceCount(Local<String> property, const AccessorInfo &info);
 
 #endif

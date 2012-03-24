@@ -10,8 +10,8 @@ void init (Handle<Object> target) {
   cuInit(0);
 
   // These methods don't need instances
-  NODE_SET_METHOD(target, "DriverGetVersion", driverGetVersion);
-  NODE_SET_METHOD(target, "DeviceGetCount", deviceGetCount);
+  target->SetAccessor(String::New("driverVersion"), GetDriverVersion);
+  target->SetAccessor(String::New("deviceCount"), GetDeviceCount);
 
   // Initialize driver api bindings
   Device::Initialize(target);
@@ -19,14 +19,14 @@ void init (Handle<Object> target) {
   Mem::Initialize(target);
 }
 
-Handle<Value> driverGetVersion(const Arguments& args) {
+Handle<Value> GetDriverVersion(Local<String> property, const AccessorInfo &info) {
   HandleScope scope;
   int driverVersion = 0;
   cuDriverGetVersion(&driverVersion);
   return scope.Close(Integer::New(driverVersion));
 }
 
-Handle<Value> deviceGetCount(const Arguments& args) {
+Handle<Value> GetDeviceCount(Local<String> property, const AccessorInfo &info) {
   HandleScope scope;
   int count = 0;
   cuDeviceGetCount(&count);

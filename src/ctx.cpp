@@ -9,15 +9,15 @@ void Ctx::Initialize(Handle<Object> target) {
   Local<FunctionTemplate> t = FunctionTemplate::New(Ctx::New);
   constructor_template = Persistent<FunctionTemplate>::New(t);
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
-  constructor_template->SetClassName(String::NewSymbol("Ctx"));
+  constructor_template->SetClassName(String::NewSymbol("CudaCtx"));
 
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "Destroy", Ctx::destroy);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "PushCurrent", Ctx::pushCurrent);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "PopCurrent", Ctx::popCurrent);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "SetCurrent", Ctx::setCurrent);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "GetCurrent", Ctx::getCurrent);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "Synchronize", Ctx::synchronize);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "GetApiVersion", Ctx::getApiVersion);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "destroy", Ctx::Destroy);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "pushCurrent", Ctx::PushCurrent);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "popCurrent", Ctx::PopCurrent);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "setCurrent", Ctx::SetCurrent);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "getCurrent", Ctx::GetCurrent);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "synchronize", Ctx::Synchronize);
+  constructor_template->InstanceTemplate()->SetAccessor(String::New("apiVersion"), Ctx::GetApiVersion);
 
   target->Set(String::NewSymbol("Ctx"), constructor_template->GetFunction());
 }
@@ -35,7 +35,7 @@ Handle<Value> Ctx::New(const Arguments& args) {
   return args.This();
 }
 
-Handle<Value> Ctx::destroy(const Arguments& args) {
+Handle<Value> Ctx::Destroy(const Arguments& args) {
   HandleScope scope;
   Ctx *pctx = ObjectWrap::Unwrap<Ctx>(args.This());
 
@@ -43,7 +43,7 @@ Handle<Value> Ctx::destroy(const Arguments& args) {
   return scope.Close(Number::New(error));
 }
 
-Handle<Value> Ctx::pushCurrent(const Arguments& args) {
+Handle<Value> Ctx::PushCurrent(const Arguments& args) {
   HandleScope scope;
   Ctx *pctx = ObjectWrap::Unwrap<Ctx>(args.This());
 
@@ -51,7 +51,7 @@ Handle<Value> Ctx::pushCurrent(const Arguments& args) {
   return scope.Close(Number::New(error));
 }
 
-Handle<Value> Ctx::popCurrent(const Arguments& args) {
+Handle<Value> Ctx::PopCurrent(const Arguments& args) {
   HandleScope scope;
   Ctx *pctx = ObjectWrap::Unwrap<Ctx>(args.This());
 
@@ -59,7 +59,7 @@ Handle<Value> Ctx::popCurrent(const Arguments& args) {
   return scope.Close(Number::New(error));
 }
 
-Handle<Value> Ctx::setCurrent(const Arguments& args) {
+Handle<Value> Ctx::SetCurrent(const Arguments& args) {
   HandleScope scope;
   Ctx *pctx = ObjectWrap::Unwrap<Ctx>(args.This());
 
@@ -67,7 +67,7 @@ Handle<Value> Ctx::setCurrent(const Arguments& args) {
   return scope.Close(Number::New(error));
 }
 
-Handle<Value> Ctx::getCurrent(const Arguments& args) {
+Handle<Value> Ctx::GetCurrent(const Arguments& args) {
   HandleScope scope;
   Ctx *pctx = ObjectWrap::Unwrap<Ctx>(args.This());
 
@@ -75,16 +75,16 @@ Handle<Value> Ctx::getCurrent(const Arguments& args) {
   return scope.Close(Number::New(error));
 }
 
-Handle<Value> Ctx::synchronize(const Arguments& args) {
+Handle<Value> Ctx::Synchronize(const Arguments& args) {
   HandleScope scope;
 
   CUresult error = cuCtxSynchronize();
   return scope.Close(Number::New(error));
 }
 
-Handle<Value> Ctx::getApiVersion(const Arguments& args) {
+Handle<Value> Ctx::GetApiVersion(Local<String> property, const AccessorInfo &info) {
   HandleScope scope;
-  Ctx *pctx = ObjectWrap::Unwrap<Ctx>(args.This());
+  Ctx *pctx = ObjectWrap::Unwrap<Ctx>(info.Holder());
 
   unsigned int version;
   CUresult error = cuCtxGetApiVersion(pctx->m_context, &version);

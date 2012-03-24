@@ -8,53 +8,63 @@ void Mem::Initialize(Handle<Object> target) {
   Local<FunctionTemplate> t = FunctionTemplate::New(Mem::New);
   constructor_template = Persistent<FunctionTemplate>::New(t);
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
-  constructor_template->SetClassName(String::NewSymbol("Mem"));
+  constructor_template->SetClassName(String::NewSymbol("CudaMem"));
 
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "Alloc", Mem::alloc);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "AllocPitch", Mem::allocPitch);
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "Free", Mem::free);
-
-  target->Set(String::NewSymbol("Mem"), constructor_template->GetFunction());
+  // Mem objects can only be created by allocation functions
+  NODE_SET_METHOD(target, "memAlloc", Mem::Alloc);
+  NODE_SET_METHOD(target, "memAllocPitch", Mem::AllocPitch);
+  
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "free", Mem::Free);
 }
 
 Handle<Value> Mem::New(const Arguments& args) {
   HandleScope scope;
 
-  Mem *cuptr = new Mem();
-  cuptr->Wrap(args.This());
+  Mem *pmem = new Mem();
+  pmem->Wrap(args.This());
 
   return args.This();
 }
 
-Handle<Value> Mem::alloc(const Arguments& args) {
+Handle<Value> Mem::Alloc(const Arguments& args) {
   HandleScope scope;
-  Mem *cuptr = ObjectWrap::Unwrap<Mem>(args.This());
+  Local<Object> result = constructor_template->InstanceTemplate()->NewInstance();
+  Mem *pmem = ObjectWrap::Unwrap<Mem>(result);
 
   size_t bytesize = args[0]->Uint32Value();
-  CUresult error = cuMemAlloc(&(cuptr->m_devicePtr), bytesize);
+  CUresult error = cuMemAlloc(&(pmem->m_devicePtr), bytesize);
+  
+  // TODO: Throw error if any
+  
+  result->Set(String::New("size"), Integer::NewFromUnsigned(bytesize));
 
-  return scope.Close(Number::New(error));
+  return scope.Close(result);
 }
 
-Handle<Value> Mem::allocPitch(const Arguments& args) {
+Handle<Value> Mem::AllocPitch(const Arguments& args) {
   HandleScope scope;
-  Mem *cuptr = ObjectWrap::Unwrap<Mem>(args.This());
+  Local<Object> result = constructor_template->InstanceTemplate()->NewInstance();
+  Mem *pmem = ObjectWrap::Unwrap<Mem>(result);
 
-  size_t bytesize = args[0]->Uint32Value();
   size_t pPitch;
-  size_t WidthInBytes = args[1]->Uint32Value();
-  size_t Height = args[2]->Uint32Value();
   unsigned int ElementSizeBytes = args[2]->Uint32Value();
-  CUresult error = cuMemAllocPitch(&(cuptr->m_devicePtr), &pPitch, WidthInBytes, Height, ElementSizeBytes);
+  size_t WidthInBytes = ElementSizeBytes * args[0]->Uint32Value();
+  size_t Height = args[1]->Uint32Value();
+  CUresult error = cuMemAllocPitch(&(pmem->m_devicePtr), &pPitch, WidthInBytes, Height, ElementSizeBytes);
+  
+  // TODO: Throw error if any
+  
+  result->Set(String::New("size"), Integer::NewFromUnsigned(pPitch * Height));
+  result->Set(String::New("pitch"), Integer::NewFromUnsigned(pPitch));
 
-  return scope.Close(Number::New(pPitch));
+  return scope.Close(result);
 }
 
-Handle<Value> Mem::free(const Arguments& args) {
+Handle<Value> Mem::Free(const Arguments& args) {
   HandleScope scope;
-  Mem *cuptr = ObjectWrap::Unwrap<Mem>(args.This());
+  Mem *pmem = ObjectWrap::Unwrap<Mem>(args.This());
 
-  CUresult error = cuMemFree(cuptr->m_devicePtr);
+  CUresult error = cuMemFree(pmem->m_devicePtr);
 
   return scope.Close(Number::New(error));
 }

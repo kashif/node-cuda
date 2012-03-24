@@ -12,13 +12,13 @@ protected:
   static Persistent<FunctionTemplate> constructor_template;
   
   static Handle<Value> New(const Arguments& args);
-  static Handle<Value> destroy(const Arguments& args);
-  static Handle<Value> pushCurrent(const Arguments& args);
-  static Handle<Value> popCurrent(const Arguments& args);
-  static Handle<Value> setCurrent(const Arguments& args);
-  static Handle<Value> getCurrent(const Arguments& args);
-  static Handle<Value> synchronize(const Arguments& args);
-  static Handle<Value> getApiVersion(const Arguments& args);
+  static Handle<Value> Destroy(const Arguments& args);
+  static Handle<Value> PushCurrent(const Arguments& args);
+  static Handle<Value> PopCurrent(const Arguments& args);
+  static Handle<Value> SetCurrent(const Arguments& args);
+  static Handle<Value> GetCurrent(const Arguments& args);
+  static Handle<Value> Synchronize(const Arguments& args);
+  static Handle<Value> GetApiVersion(Local<String> property, const AccessorInfo &info);
 
   Ctx() : ObjectWrap(), m_context(NULL) {}
   

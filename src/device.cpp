@@ -8,16 +8,16 @@ void Device::Initialize(Handle<Object> target) {
   Local<FunctionTemplate> t = FunctionTemplate::New(Device::New);
   constructor_template = Persistent<FunctionTemplate>::New(t);
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
-  constructor_template->SetClassName(String::NewSymbol("Device"));
+  constructor_template->SetClassName(String::NewSymbol("CudaDevice"));
 
-  constructor_template->InstanceTemplate()->SetAccessor(String::New("name"), Device::Name);
-  constructor_template->InstanceTemplate()->SetAccessor(String::New("totalMem"), Device::TotalMem);
-  constructor_template->InstanceTemplate()->SetAccessor(String::New("computeCapability"), Device::ComputeCapability);
+  constructor_template->InstanceTemplate()->SetAccessor(String::New("name"), Device::GetName);
+  constructor_template->InstanceTemplate()->SetAccessor(String::New("totalMem"), Device::GetTotalMem);
+  constructor_template->InstanceTemplate()->SetAccessor(String::New("computeCapability"), Device::GetComputeCapability);
 
   target->Set(String::NewSymbol("Device"), constructor_template->GetFunction());
 }
 
-static Handle<Value> GetName(CUdevice device) {
+static Handle<Value> GetName_(CUdevice device) {
   HandleScope scope;
   char deviceName[256];
   
@@ -28,29 +28,26 @@ static Handle<Value> GetName(CUdevice device) {
 
 Handle<Value> Device::New(const Arguments& args) {
   HandleScope scope;
+  Local<Object> result = args.This();
   int ordinal = args[0]->IntegerValue();
 
-  if (constructor_template->HasInstance(args.This())) {
-    Device *cu = new Device();
-    cuDeviceGet(&(cu->m_device), ordinal);
-
-    cu->Wrap(args.This());
-    return args.This();
-  
-  } else {
-    CUdevice device;
-    
-    cuDeviceGet(&device, ordinal);
-    return GetName(device);
+  if (!constructor_template->HasInstance(result)) {
+    result = constructor_template->InstanceTemplate()->NewInstance();
   }
+  
+  Device *pdevice = new Device();
+  cuDeviceGet(&(pdevice->m_device), ordinal);
+
+  pdevice->Wrap(result);
+  return scope.Close(result);
 }
 
-Handle<Value> Device::ComputeCapability(Local<String> property, const AccessorInfo &info) {
+Handle<Value> Device::GetComputeCapability(Local<String> property, const AccessorInfo &info) {
   HandleScope scope;
 
-  Device *cu = ObjectWrap::Unwrap<Device>(info.Holder());
+  Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
   int major = 0, minor = 0;
-  cuDeviceComputeCapability(&major, &minor, cu->m_device);
+  cuDeviceComputeCapability(&major, &minor, pdevice->m_device);
   
   Local<Object> result = Object::New();
   result->Set(String::New("major"), Integer::New(major));
@@ -58,19 +55,19 @@ Handle<Value> Device::ComputeCapability(Local<String> property, const AccessorIn
   return scope.Close(result);
 }
 
-Handle<Value> Device::Name(Local<String> property, const AccessorInfo &info) {
+Handle<Value> Device::GetName(Local<String> property, const AccessorInfo &info) {
   HandleScope scope;
 
-  Device *cu = ObjectWrap::Unwrap<Device>(info.Holder());
-  return GetName(cu->m_device);
+  Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
+  return GetName_(pdevice->m_device);
 }
 
-Handle<Value> Device::TotalMem(Local<String> property, const AccessorInfo &info) {
+Handle<Value> Device::GetTotalMem(Local<String> property, const AccessorInfo &info) {
   HandleScope scope;
 
-  Device *cu = ObjectWrap::Unwrap<Device>(info.Holder());
+  Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
   size_t totalGlobalMem;
-  cuDeviceTotalMem(&totalGlobalMem, cu->m_device);
+  cuDeviceTotalMem(&totalGlobalMem, pdevice->m_device);
   
   return scope.Close(Number::New(totalGlobalMem));
 }

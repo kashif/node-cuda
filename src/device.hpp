@@ -12,9 +12,12 @@ protected:
   static Persistent<FunctionTemplate> constructor_template;
 
   static Handle<Value> New(const Arguments& args);
-  static Handle<Value> ComputeCapability(Local<String> property, const AccessorInfo &info);
-  static Handle<Value> Name(Local<String> property, const AccessorInfo &info);
-  static Handle<Value> TotalMem(Local<String> property, const AccessorInfo &info);
+  static Handle<Value> GetComputeCapability(Local<String> property, const AccessorInfo &info);
+  static Handle<Value> GetName(Local<String> property, const AccessorInfo &info);
+  static Handle<Value> GetTotalMem(Local<String> property, const AccessorInfo &info);
+
+  // TODO: cuDeviceGetAttribute
+  // TODO: cuDeviceGetProperties
 
   Device() : ObjectWrap(), m_device(NULL) {}
 
