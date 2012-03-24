@@ -34,9 +34,8 @@ Handle<Value> Mem::Alloc(const Arguments& args) {
   size_t bytesize = args[0]->Uint32Value();
   CUresult error = cuMemAlloc(&(pmem->m_devicePtr), bytesize);
   
-  // TODO: Throw error if any
-  
   result->Set(String::New("size"), Integer::NewFromUnsigned(bytesize));
+  result->Set(String::New("error"), Integer::New(error));
 
   return scope.Close(result);
 }
@@ -52,10 +51,9 @@ Handle<Value> Mem::AllocPitch(const Arguments& args) {
   size_t Height = args[1]->Uint32Value();
   CUresult error = cuMemAllocPitch(&(pmem->m_devicePtr), &pPitch, WidthInBytes, Height, ElementSizeBytes);
   
-  // TODO: Throw error if any
-  
   result->Set(String::New("size"), Integer::NewFromUnsigned(pPitch * Height));
   result->Set(String::New("pitch"), Integer::NewFromUnsigned(pPitch));
+  result->Set(String::New("error"), Integer::New(error));
 
   return scope.Close(result);
 }

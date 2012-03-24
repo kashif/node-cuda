@@ -11,7 +11,6 @@ public:
 protected:
   static Persistent<FunctionTemplate> constructor_template;
   
-  static Handle<Value> New(const Arguments& args);
   static Handle<Value> Alloc(const Arguments& args);
   static Handle<Value> AllocPitch(const Arguments& args);
   static Handle<Value> Free(const Arguments& args);
@@ -21,6 +20,8 @@ protected:
   ~Mem() {}
 
 private:
+  static Handle<Value> New(const Arguments& args);
+  
   CUdeviceptr m_devicePtr;
 };
 

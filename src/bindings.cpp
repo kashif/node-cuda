@@ -1,7 +1,8 @@
 #include "bindings.hpp"
-#include "device.hpp"
 #include "ctx.hpp"
+#include "device.hpp"
 #include "mem.hpp"
+#include "module.hpp"
 
 void init (Handle<Object> target) {
   HandleScope scope;
@@ -14,9 +15,10 @@ void init (Handle<Object> target) {
   target->SetAccessor(String::New("deviceCount"), GetDeviceCount);
 
   // Initialize driver api bindings
-  Device::Initialize(target);
   Ctx::Initialize(target);
+  Device::Initialize(target);
   Mem::Initialize(target);
+  Module::Initialize(target);
 }
 
 Handle<Value> GetDriverVersion(Local<String> property, const AccessorInfo &info) {

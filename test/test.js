@@ -31,7 +31,7 @@ var cuMem = cu.memAlloc(100);
 console.log("Allocated 100 bytes:", cuMem);
 
 //cuMemFree
-error = cuMem.free();
+var error = cuMem.free();
 console.log("Mem Free with error code: " + error);
 
 //cuMemAllocPitch
@@ -39,9 +39,13 @@ var cuMem = cu.memAllocPitch(100, 100, 8);
 console.log("Allocated 100x100 array of doubles:", cuMem);
 
 //cuMemFree
-error = cuMem.free();
+var error = cuMem.free();
 console.log("Mem Free with error code: " + error);
 
+
+//cuModuleLoad
+var error = cu.moduleLoad("test/test.ptx");
+console.log("Loaded module:", error);
 
 //cuCtxDestroy
 error = cuCtx.destroy();
