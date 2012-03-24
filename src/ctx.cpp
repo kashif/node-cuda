@@ -1,6 +1,8 @@
 #include "ctx.hpp"
 #include "device.hpp"
 
+using namespace NodeCuda;
+
 Persistent<FunctionTemplate> Ctx::constructor_template;
 
 void Ctx::Initialize(Handle<Object> target) {

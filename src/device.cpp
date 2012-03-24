@@ -1,5 +1,7 @@
 #include "device.hpp"
 
+using namespace NodeCuda;
+
 Persistent<FunctionTemplate> Device::constructor_template;
 
 void Device::Initialize(Handle<Object> target) {

@@ -44,8 +44,16 @@ console.log("Mem Free with error code: " + error);
 
 
 //cuModuleLoad
-var error = cu.moduleLoad("test/test.ptx");
-console.log("Loaded module:", error);
+var cuModule = cu.moduleLoad("test/test.cubin");
+console.log("Loaded module:", cuModule);
+
+//cuModuleGetFunction
+var cuFunction = cuModule.getFunction("helloWorld");
+console.log("Got function:", cuFunction);
+
+//cuLaunchKernel
+var error = cuFunction.launch([3,1,1],[2,2,2]);
+console.log("Launched kernel:", error);
 
 //cuCtxDestroy
 error = cuCtx.destroy();

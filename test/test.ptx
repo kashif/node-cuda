@@ -4,7 +4,7 @@
 	// nvopencc 4.0 built on 2011-05-12
 
 	//-----------------------------------------------------------
-	// Compiling /tmp/tmpxft_000050ad_00000000-9_test.cpp3.i (/tmp/ccBI#.dEPtVw)
+	// Compiling /tmp/tmpxft_00005ddb_00000000-9_test.cpp3.i (/tmp/ccBI#.hpZn7e)
 	//-----------------------------------------------------------
 
 	//-----------------------------------------------------------
@@ -17,7 +17,7 @@
 	//-----------------------------------------------------------
 
 	.file	1	"<command-line>"
-	.file	2	"/tmp/tmpxft_000050ad_00000000-8_test.cudafe2.gpu"
+	.file	2	"/tmp/tmpxft_00005ddb_00000000-8_test.cudafe2.gpu"
 	.file	3	"/usr/lib/gcc/x86_64-redhat-linux/4.4.5/include/stddef.h"
 	.file	4	"/usr/local/cuda/bin/../include/crt/device_runtime.h"
 	.file	5	"/usr/local/cuda/bin/../include/host_defines.h"
@@ -46,12 +46,12 @@
 	.file	28	"/usr/local/cuda/bin/../include/math_functions_dbl_ptx1.h"
 
 
-	.entry _Z10helloWorldv
+	.entry helloWorld
 	{
-	.loc	16	3	0
-$LDWbegin__Z10helloWorldv:
-	.loc	16	7	0
+	.loc	16	4	0
+$LDWbegin_helloWorld:
+	.loc	16	8	0
 	exit;
-$LDWend__Z10helloWorldv:
-	} // _Z10helloWorldv
+$LDWend_helloWorld:
+	} // helloWorld
 

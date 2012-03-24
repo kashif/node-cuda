@@ -4,6 +4,8 @@
 #include <cuda.h>
 #include "bindings.hpp"
 
+namespace NodeCuda {
+
 class Ctx : public ObjectWrap {
 public:
   static void Initialize(Handle<Object> target);
@@ -27,4 +29,7 @@ protected:
 private:
   CUcontext m_context;
 };
+
+}
+
 #endif

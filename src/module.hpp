@@ -4,9 +4,12 @@
 #include <cuda.h>
 #include "bindings.hpp"
 
+namespace NodeCuda {
+
 class Module : public ObjectWrap {
 public:
   static void Initialize(Handle<Object> target);
+  static Handle<Value> GetFunction(const Arguments& args);
 
 protected:
   static Persistent<FunctionTemplate> constructor_template;
@@ -22,5 +25,7 @@ private:
   
   CUmodule m_module;
 };
+
+}
 
 #endif

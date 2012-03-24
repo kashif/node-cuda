@@ -4,6 +4,8 @@
 #include <cuda.h>
 #include "bindings.hpp"
 
+namespace NodeCuda {
+
 class Device : public ObjectWrap {
 public:
   static void Initialize(Handle<Object> target);
@@ -28,5 +30,7 @@ private:
 
   friend class Ctx;
 };
+
+}
 
 #endif
