@@ -1,10 +1,13 @@
+#include <node_buffer.h>
 #include "mem.hpp"
+
+using namespace NodeCuda;
 
 Persistent<FunctionTemplate> Mem::constructor_template;
 
 void Mem::Initialize(Handle<Object> target) {
   HandleScope scope;
-  
+
   Local<FunctionTemplate> t = FunctionTemplate::New(Mem::New);
   constructor_template = Persistent<FunctionTemplate>::New(t);
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
@@ -13,8 +16,9 @@ void Mem::Initialize(Handle<Object> target) {
   // Mem objects can only be created by allocation functions
   NODE_SET_METHOD(target, "memAlloc", Mem::Alloc);
   NODE_SET_METHOD(target, "memAllocPitch", Mem::AllocPitch);
-  
+
   NODE_SET_PROTOTYPE_METHOD(constructor_template, "free", Mem::Free);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "copyHtoD", Mem::CopyHtoD);
 }
 
 Handle<Value> Mem::New(const Arguments& args) {
@@ -33,7 +37,7 @@ Handle<Value> Mem::Alloc(const Arguments& args) {
 
   size_t bytesize = args[0]->Uint32Value();
   CUresult error = cuMemAlloc(&(pmem->m_devicePtr), bytesize);
-  
+
   result->Set(String::New("size"), Integer::NewFromUnsigned(bytesize));
   result->Set(String::New("error"), Integer::New(error));
 
@@ -50,7 +54,7 @@ Handle<Value> Mem::AllocPitch(const Arguments& args) {
   size_t WidthInBytes = ElementSizeBytes * args[0]->Uint32Value();
   size_t Height = args[1]->Uint32Value();
   CUresult error = cuMemAllocPitch(&(pmem->m_devicePtr), &pPitch, WidthInBytes, Height, ElementSizeBytes);
-  
+
   result->Set(String::New("size"), Integer::NewFromUnsigned(pPitch * Height));
   result->Set(String::New("pitch"), Integer::NewFromUnsigned(pPitch));
   result->Set(String::New("error"), Integer::New(error));
@@ -66,3 +70,17 @@ Handle<Value> Mem::Free(const Arguments& args) {
 
   return scope.Close(Number::New(error));
 }
+
+Handle<Value> Mem::CopyHtoD(const Arguments& args) {
+  HandleScope scope;
+  Mem *pmem = ObjectWrap::Unwrap<Mem>(args.This());
+
+  Local<Object> buf = args[0]->ToObject();
+  char *phost = Buffer::Data(buf);
+  size_t bytes = Buffer::Length(buf);
+
+  CUresult error = cuMemcpyHtoD(pmem->m_devicePtr, phost, bytes);
+
+  return scope.Close(Number::New(error));
+}
+

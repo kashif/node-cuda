@@ -1,6 +1,6 @@
 #include "function.hpp"
-#include <iostream>
-using namespace std;
+#include "mem.hpp"
+
 using namespace NodeCuda;
 
 Persistent<FunctionTemplate> NodeCuda::Function::constructor_template;
@@ -41,12 +41,13 @@ Handle<Value> NodeCuda::Function::LaunchKernel(const Arguments& args) {
   unsigned int blockDimY = blockDim->Get(1)->Uint32Value();
   unsigned int blockDimZ = blockDim->Get(2)->Uint32Value();
   
-  cout << "Grid " << gridDimX << "," << gridDimY << "," << gridDimZ << endl;
-  cout << "Block " << blockDimX << "," << blockDimY << "," << blockDimZ << endl;
+  Mem *mem = ObjectWrap::Unwrap<Mem>(args[2]->ToObject());
+
+  void *cuArgs[] = { &mem->m_devicePtr };
 
   CUresult error = cuLaunchKernel(pfunction->m_function,
     gridDimX, gridDimY, gridDimZ,
     blockDimX, blockDimY, blockDimZ,
-    0, 0, NULL, NULL);
+    0, 0, cuArgs, NULL);
   return scope.Close(Number::New(error));
 }

@@ -3,6 +3,9 @@
 
 #include <cuda.h>
 #include "bindings.hpp"
+#include "function.hpp"
+
+namespace NodeCuda {
 
 class Mem : public ObjectWrap {
 public:
@@ -10,19 +13,24 @@ public:
 
 protected:
   static Persistent<FunctionTemplate> constructor_template;
-  
+
   static Handle<Value> Alloc(const Arguments& args);
   static Handle<Value> AllocPitch(const Arguments& args);
   static Handle<Value> Free(const Arguments& args);
+  static Handle<Value> CopyHtoD(const Arguments& args);
 
   Mem() : ObjectWrap(), m_devicePtr(0) {}
-  
+
   ~Mem() {}
 
 private:
   static Handle<Value> New(const Arguments& args);
-  
+
   CUdeviceptr m_devicePtr;
+
+  friend class NodeCuda::Function;
 };
+
+}
 
 #endif

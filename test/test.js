@@ -1,3 +1,4 @@
+var Buffer = require('buffer').Buffer;
 var cu = require(__dirname + '/../build/Release/cuda');
 
 //cuDriverGetVersion
@@ -21,18 +22,6 @@ var cuCtx = new cu.Ctx(0, cu.Device(0));
 //cuCtxGetApiVersion
 console.log("Created context:", cuCtx);
 
-//cuCtxSynchronize
-var error = cuCtx.synchronize();
-console.log("Context synchronize with error code: " + error);
-
-
-//cuMemAlloc
-var cuMem = cu.memAlloc(100);
-console.log("Allocated 100 bytes:", cuMem);
-
-//cuMemFree
-var error = cuMem.free();
-console.log("Mem Free with error code: " + error);
 
 //cuMemAllocPitch
 var cuMem = cu.memAllocPitch(100, 100, 8);
@@ -41,6 +30,20 @@ console.log("Allocated 100x100 array of doubles:", cuMem);
 //cuMemFree
 var error = cuMem.free();
 console.log("Mem Free with error code: " + error);
+
+//cuMemAlloc
+var cuMem = cu.memAlloc(100);
+console.log("Allocated 100 bytes:", cuMem);
+
+var buf = new Buffer(100);
+for (var i=0; i<buf.length; i++) {
+  buf[i] = (i+1) % 256;
+}
+console.log("Created buffer of 100 bytes:", buf);
+
+// cuMemcpyHtoD
+var error = cuMem.copyHtoD(buf);
+console.log("Copied buffer to device:", error);
 
 
 //cuModuleLoad
@@ -52,8 +55,17 @@ var cuFunction = cuModule.getFunction("helloWorld");
 console.log("Got function:", cuFunction);
 
 //cuLaunchKernel
-var error = cuFunction.launch([3,1,1],[2,2,2]);
+var error = cuFunction.launch([3,1,1], [2,2,2], cuMem, 100);
 console.log("Launched kernel:", error);
+
+
+//cuCtxSynchronize
+var error = cuCtx.synchronize();
+console.log("Context synchronize with error code: " + error);
+
+//cuMemFree
+var error = cuMem.free();
+console.log("Mem Free with error code: " + error);
 
 //cuCtxDestroy
 error = cuCtx.destroy();
