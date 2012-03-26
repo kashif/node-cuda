@@ -54,10 +54,20 @@ console.log("Loaded module:", cuModule);
 var cuFunction = cuModule.getFunction("helloWorld");
 console.log("Got function:", cuFunction);
 
+var paramBuffer = new Buffer(256);
+var paramBufferSize = 0;
+var argBuffer = new Buffer(8);
+paramBufferSize = cu.addToParamBuffer(paramBuffer, paramBufferSize, cuMem.devicePtr, 8);
+
 //cuLaunchKernel
-var error = cuFunction.launch([3,1,1], [2,2,2], cuMem, 100);
+//var error = cuFunction.launch([3,1,1], [2,2,2], cuMem);
+var error = cuFunction.launch([3,1,1], [2,2,2], paramBuffer, paramBufferSize);
 console.log("Launched kernel:", error);
 
+
+// cuMemcpyDtoH
+var error = cuMem.copyDtoH(buf);
+console.log("Copied buffer to host:", error);
 
 //cuCtxSynchronize
 var error = cuCtx.synchronize();

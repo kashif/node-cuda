@@ -18,7 +18,10 @@ protected:
   static Handle<Value> AllocPitch(const Arguments& args);
   static Handle<Value> Free(const Arguments& args);
   static Handle<Value> CopyHtoD(const Arguments& args);
+  static Handle<Value> CopyDtoH(const Arguments& args);
 
+  static Handle<Value> GetDevicePtr(Local<String> property, const AccessorInfo &info);
+  
   Mem() : ObjectWrap(), m_devicePtr(0) {}
 
   ~Mem() {}

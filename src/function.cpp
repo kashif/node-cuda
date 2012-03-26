@@ -1,3 +1,6 @@
+#include <node_buffer.h>
+#include <cstring>
+#include <cstdio>
 #include "function.hpp"
 #include "mem.hpp"
 
@@ -7,14 +10,16 @@ Persistent<FunctionTemplate> NodeCuda::Function::constructor_template;
 
 void NodeCuda::Function::Initialize(Handle<Object> target) {
   HandleScope scope;
-  
+
   Local<FunctionTemplate> t = FunctionTemplate::New(NodeCuda::Function::New);
   constructor_template = Persistent<FunctionTemplate>::New(t);
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
   constructor_template->SetClassName(String::NewSymbol("CudaFunction"));
+  
+  NODE_SET_METHOD(target, "addToParamBuffer", NodeCuda::Function::AddToParamBuffer);
 
   NODE_SET_PROTOTYPE_METHOD(constructor_template, "launch", NodeCuda::Function::LaunchKernel);
-  
+
   // Function objects can only be created by cuModuleGetFunction
 }
 
@@ -35,19 +40,53 @@ Handle<Value> NodeCuda::Function::LaunchKernel(const Arguments& args) {
   unsigned int gridDimX = gridDim->Get(0)->Uint32Value();
   unsigned int gridDimY = gridDim->Get(1)->Uint32Value();
   unsigned int gridDimZ = gridDim->Get(2)->Uint32Value();
-  
+
   Local<Array> blockDim = Local<Array>::Cast(args[1]);
   unsigned int blockDimX = blockDim->Get(0)->Uint32Value();
   unsigned int blockDimY = blockDim->Get(1)->Uint32Value();
   unsigned int blockDimZ = blockDim->Get(2)->Uint32Value();
-  
-  Mem *mem = ObjectWrap::Unwrap<Mem>(args[2]->ToObject());
 
-  void *cuArgs[] = { &mem->m_devicePtr };
+  Local<Object> buf = args[2]->ToObject();
+  char *pbuffer = Buffer::Data(buf);
+  size_t bufferSize = args[3]->IntegerValue();
+
+  void *cuExtra[] = {
+    CU_LAUNCH_PARAM_BUFFER_POINTER, pbuffer,
+    CU_LAUNCH_PARAM_BUFFER_SIZE,    &bufferSize,
+    CU_LAUNCH_PARAM_END
+  };
 
   CUresult error = cuLaunchKernel(pfunction->m_function,
     gridDimX, gridDimY, gridDimZ,
     blockDimX, blockDimY, blockDimZ,
-    0, 0, cuArgs, NULL);
+    0, 0, NULL, cuExtra);
+
   return scope.Close(Number::New(error));
 }
+
+// From from NVIDIA C Programming Guide
+#define ALIGN_UP(offset, alignment) \
+      (((offset) + (alignment) - 1) & ~((alignment) - 1))
+
+Handle<Value> NodeCuda::Function::AddToParamBuffer(const Arguments& args) {
+  HandleScope scope;
+  
+  Local<Object> dstbuf = args[0]->ToObject();
+  char *dst = Buffer::Data(dstbuf);
+  
+  size_t bufferSize = args[1]->IntegerValue();
+  
+  Local<Object> srcbuf = args[2]->ToObject();
+  char *src = Buffer::Data(srcbuf);
+  size_t srclen = Buffer::Length(srcbuf);
+  
+  size_t alignment = args[3]->IntegerValue();
+
+  bufferSize = ALIGN_UP(bufferSize, alignment);
+  for (int i=0; i<srclen; i++)
+    dst[i+bufferSize] = src[i];
+  bufferSize += srclen;
+
+  return scope.Close(Number::New(bufferSize));
+}
+
