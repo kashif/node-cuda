@@ -3,6 +3,7 @@
 
 #include <cuda.h>
 #include "bindings.hpp"
+#include "device.hpp"
 
 namespace NodeCuda {
 
@@ -22,12 +23,18 @@ protected:
   static Handle<Value> Synchronize(const Arguments& args);
   static Handle<Value> GetApiVersion(Local<String> property, const AccessorInfo &info);
 
-  Ctx() : ObjectWrap(), m_context(NULL) {}
+  Ctx() : ObjectWrap(), m_context(NULL), m_device(0), sync_in_progress(false) {}
   
   ~Ctx () {}
 
 private:
   CUcontext m_context;
+  CUdevice m_device;
+  
+  bool sync_in_progress;
+
+  static void EIO_Synchronize(eio_req *req);
+  static int EIO_AfterSynchronize(eio_req *req);
 };
 
 }

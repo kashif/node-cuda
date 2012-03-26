@@ -70,13 +70,15 @@ var error = cuMem.copyDtoH(buf);
 console.log("Copied buffer to host:", error);
 
 //cuCtxSynchronize
-var error = cuCtx.synchronize();
-console.log("Context synchronize with error code: " + error);
+var error = cuCtx.synchronize(function (error) {
+  console.log("Context synchronize with error code: " + error);
 
-//cuMemFree
-var error = cuMem.free();
-console.log("Mem Free with error code: " + error);
+  //cuMemFree
+  var error = cuMem.free();
+  console.log("Mem Free with error code: " + error);
 
-//cuCtxDestroy
-error = cuCtx.destroy();
-console.log("Context destroyed with error code: " + error);
+  //cuCtxDestroy
+  error = cuCtx.destroy();
+  console.log("Context destroyed with error code: " + error);
+});
+
