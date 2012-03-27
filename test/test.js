@@ -66,7 +66,7 @@ console.log("Launched kernel:", error);
 
 
 // cuMemcpyDtoH
-var error = cuMem.copyDtoH(buf);
+var error = cuMem.copyDtoH(buf, true);
 console.log("Copied buffer to host:", error);
 
 //cuCtxSynchronize

@@ -83,7 +83,14 @@ Handle<Value> Mem::CopyHtoD(const Arguments& args) {
   char *phost = Buffer::Data(buf);
   size_t bytes = Buffer::Length(buf);
 
-  CUresult error = cuMemcpyHtoD(pmem->m_devicePtr, phost, bytes);
+  bool async = args.Length() >= 2 && args[1]->IsTrue();
+
+  CUresult error;
+  if (async) {
+    error = cuMemcpyHtoDAsync(pmem->m_devicePtr, phost, bytes, 0);
+  } else {
+    error = cuMemcpyHtoD(pmem->m_devicePtr, phost, bytes);
+  }
 
   return scope.Close(Number::New(error));
 }
@@ -96,7 +103,14 @@ Handle<Value> Mem::CopyDtoH(const Arguments& args) {
   char *phost = Buffer::Data(buf);
   size_t bytes = Buffer::Length(buf);
 
-  CUresult error = cuMemcpyDtoH(phost, pmem->m_devicePtr, bytes);
+  bool async = args.Length() >= 2 && args[1]->IsTrue();
+
+  CUresult error;
+  if (async) {
+    error = cuMemcpyDtoHAsync(phost, pmem->m_devicePtr, bytes, 0);
+  } else {
+    error = cuMemcpyDtoH(phost, pmem->m_devicePtr, bytes);
+  }
 
   return scope.Close(Number::New(error));
 }
