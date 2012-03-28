@@ -16,7 +16,7 @@ void NodeCuda::Function::Initialize(Handle<Object> target) {
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
   constructor_template->SetClassName(String::NewSymbol("CudaFunction"));
   
-  NODE_SET_PROTOTYPE_METHOD(constructor_template, "launch", NodeCuda::Function::LaunchKernel);
+  NODE_SET_PROTOTYPE_METHOD(constructor_template, "launchKernel", NodeCuda::Function::LaunchKernel);
 
   // Function objects can only be created by cuModuleGetFunction
 }

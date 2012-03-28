@@ -75,3 +75,13 @@ module.exports.prepareArguments = function (args) {
   return paramBuffer;
 }
 
+module.exports.launch = function () {
+  var func = arguments[0];
+  var gridDim = arguments[1];
+  var blockDim = arguments[2];
+  var args = arguments[3];
+
+  args = module.exports.prepareArguments(args);
+
+  return func.launchKernel(gridDim, blockDim, args);
+}

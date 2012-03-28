@@ -55,10 +55,8 @@ var cuFunction = cuModule.getFunction("helloWorld");
 console.log("Got function:", cuFunction);
 
 //cuLaunchKernel
-var args = cu.prepareArguments([
-  { type: "DevicePtr",  value: cuMem.devicePtr },
-]);
-var error = cuFunction.launch([3,1,1], [2,2,2], args);
+var error = cu.launch(cuFunction, [3,1,1], [2,2,2],
+  [ { type: "DevicePtr",  value: cuMem.devicePtr } ]);
 console.log("Launched kernel:", error);
 
 
