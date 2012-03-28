@@ -1,5 +1,5 @@
 var Buffer = require('buffer').Buffer;
-var cu = require(__dirname + '/../build/Release/cuda');
+var cu = require(__dirname + '/../index');
 
 //cuDriverGetVersion
 //cuDeviceGetCount
@@ -54,14 +54,11 @@ console.log("Loaded module:", cuModule);
 var cuFunction = cuModule.getFunction("helloWorld");
 console.log("Got function:", cuFunction);
 
-var paramBuffer = new Buffer(256);
-var paramBufferSize = 0;
-var argBuffer = new Buffer(8);
-paramBufferSize = cu.addToParamBuffer(paramBuffer, paramBufferSize, cuMem.devicePtr, 8);
-
 //cuLaunchKernel
-//var error = cuFunction.launch([3,1,1], [2,2,2], cuMem);
-var error = cuFunction.launch([3,1,1], [2,2,2], paramBuffer, paramBufferSize);
+var args = cu.prepareArguments([
+  { type: "DevicePtr",  value: cuMem.devicePtr },
+]);
+var error = cuFunction.launch([3,1,1], [2,2,2], args);
 console.log("Launched kernel:", error);
 
 

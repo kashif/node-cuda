@@ -15,7 +15,6 @@ protected:
   static Persistent<FunctionTemplate> constructor_template;
 
   static Handle<Value> LaunchKernel(const Arguments& args);
-  static Handle<Value> AddToParamBuffer(const Arguments& args);
 
   Function() : ObjectWrap(), m_function(0) {}
 

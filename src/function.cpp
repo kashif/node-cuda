@@ -16,8 +16,6 @@ void NodeCuda::Function::Initialize(Handle<Object> target) {
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
   constructor_template->SetClassName(String::NewSymbol("CudaFunction"));
   
-  NODE_SET_METHOD(target, "addToParamBuffer", NodeCuda::Function::AddToParamBuffer);
-
   NODE_SET_PROTOTYPE_METHOD(constructor_template, "launch", NodeCuda::Function::LaunchKernel);
 
   // Function objects can only be created by cuModuleGetFunction
@@ -48,7 +46,7 @@ Handle<Value> NodeCuda::Function::LaunchKernel(const Arguments& args) {
 
   Local<Object> buf = args[2]->ToObject();
   char *pbuffer = Buffer::Data(buf);
-  size_t bufferSize = args[3]->IntegerValue();
+  size_t bufferSize = Buffer::Length(buf);
 
   void *cuExtra[] = {
     CU_LAUNCH_PARAM_BUFFER_POINTER, pbuffer,
@@ -62,31 +60,5 @@ Handle<Value> NodeCuda::Function::LaunchKernel(const Arguments& args) {
     0, 0, NULL, cuExtra);
 
   return scope.Close(Number::New(error));
-}
-
-// From from NVIDIA C Programming Guide
-#define ALIGN_UP(offset, alignment) \
-      (((offset) + (alignment) - 1) & ~((alignment) - 1))
-
-Handle<Value> NodeCuda::Function::AddToParamBuffer(const Arguments& args) {
-  HandleScope scope;
-  
-  Local<Object> dstbuf = args[0]->ToObject();
-  char *dst = Buffer::Data(dstbuf);
-  
-  size_t bufferSize = args[1]->IntegerValue();
-  
-  Local<Object> srcbuf = args[2]->ToObject();
-  char *src = Buffer::Data(srcbuf);
-  size_t srclen = Buffer::Length(srcbuf);
-  
-  size_t alignment = args[3]->IntegerValue();
-
-  bufferSize = ALIGN_UP(bufferSize, alignment);
-  for (int i=0; i<srclen; i++)
-    dst[i+bufferSize] = src[i];
-  bufferSize += srclen;
-
-  return scope.Close(Number::New(bufferSize));
 }
 
