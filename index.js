@@ -28,13 +28,13 @@ var typeAlignment = {
 
 var typeBufferFunc = {
   "Uint8": "UInt8",
-  "Uint16": "UInt16",
-  "Uint32": "UInt32",
+  "Uint16": "UInt16LE",
+  "Uint32": "UInt32LE",
   "Int8": "Int8",
-  "Int16": "Int16",
-  "Int32": "Int32",
-  "Float32": "Float",
-  "Float64": "Double"
+  "Int16": "Int16LE",
+  "Int32": "Int32LE",
+  "Float32": "FloatLE",
+  "Float64": "DoubleLE"
 }
 
 function alignUp(offset, alignment) {
@@ -66,7 +66,7 @@ module.exports.prepareArguments = function (args) {
     if (type == "DevicePtr") {
       args[i].value.copy(paramBuffer, offset);
     } else {
-      paramBuffer["write" + typeBufferFunc[type] + "LE"](args[i].value, offset);
+      paramBuffer["write" + typeBufferFunc[type]](args[i].value, offset);
     }
 
     offset += typeByteSize[type];
