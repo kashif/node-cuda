@@ -23,7 +23,7 @@
     "url": "git://github.com/kashif/node-cuda.git"
   },
   "license": "MIT",
-  "engine": {
+  "engines": {
     "node": ">=0.6.0"
   }
 }
