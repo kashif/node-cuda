@@ -1,4 +1,4 @@
-module.exports = require('./build/Release/cuda');
+module.exports = require(__dirname + '/build/Release/cuda');
 
 // Type names follow the W3C typed array specs, not NodeJS's Buffer library
 
