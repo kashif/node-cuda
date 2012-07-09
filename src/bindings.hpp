@@ -9,8 +9,8 @@ using namespace node;
 
 namespace NodeCuda {
 
-static Handle<Value> GetDriverVersion(Local<String> property, const AccessorInfo &info);
-static Handle<Value> GetDeviceCount(Local<String> property, const AccessorInfo &info);
+  static Handle<Value> GetDriverVersion(Local<String> property, const AccessorInfo &info);
+  static Handle<Value> GetDeviceCount(Local<String> property, const AccessorInfo &info);
 
 }
 

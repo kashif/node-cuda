@@ -43,12 +43,12 @@ function alignUp(offset, alignment) {
 
 module.exports.prepareArguments = function (args) {
   var paramBufferSize = 0;
-  
+
   for (var i in args) {
     var type = args[i].type;
 
     paramBufferSize = alignUp(paramBufferSize, typeAlignment[type]);
-    
+
     if (typeof(typeByteSize[type]) != "number")
       throw "Invalid type given";
 
@@ -60,7 +60,7 @@ module.exports.prepareArguments = function (args) {
   var offset = 0;
   for (var i in args) {
     var type = args[i].type;
-    
+
     offset = alignUp(offset, typeAlignment[type]);
 
     if (type == "DevicePtr") {

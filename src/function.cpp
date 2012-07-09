@@ -15,7 +15,7 @@ void NodeCuda::Function::Initialize(Handle<Object> target) {
   constructor_template = Persistent<FunctionTemplate>::New(t);
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
   constructor_template->SetClassName(String::NewSymbol("CudaFunction"));
-  
+
   NODE_SET_PROTOTYPE_METHOD(constructor_template, "launchKernel", NodeCuda::Function::LaunchKernel);
 
   // Function objects can only be created by cuModuleGetFunction
@@ -55,9 +55,9 @@ Handle<Value> NodeCuda::Function::LaunchKernel(const Arguments& args) {
   };
 
   CUresult error = cuLaunchKernel(pfunction->m_function,
-    gridDimX, gridDimY, gridDimZ,
-    blockDimX, blockDimY, blockDimZ,
-    0, 0, NULL, cuExtra);
+      gridDimX, gridDimY, gridDimZ,
+      blockDimX, blockDimY, blockDimZ,
+      0, 0, NULL, cuExtra);
 
   return scope.Close(Number::New(error));
 }

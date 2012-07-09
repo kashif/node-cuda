@@ -22,7 +22,7 @@ void Device::Initialize(Handle<Object> target) {
 static Handle<Value> GetName_(CUdevice device) {
   HandleScope scope;
   char deviceName[256];
-  
+
   cuDeviceGetName(deviceName, 256, device);
   Local<String> result = String::New(deviceName);
   return scope.Close(result);
@@ -36,7 +36,7 @@ Handle<Value> Device::New(const Arguments& args) {
   if (!constructor_template->HasInstance(result)) {
     result = constructor_template->InstanceTemplate()->NewInstance();
   }
-  
+
   Device *pdevice = new Device();
   cuDeviceGet(&(pdevice->m_device), ordinal);
 
@@ -50,7 +50,7 @@ Handle<Value> Device::GetComputeCapability(Local<String> property, const Accesso
   Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
   int major = 0, minor = 0;
   cuDeviceComputeCapability(&major, &minor, pdevice->m_device);
-  
+
   Local<Object> result = Object::New();
   result->Set(String::New("major"), Integer::New(major));
   result->Set(String::New("minor"), Integer::New(minor));
@@ -70,6 +70,6 @@ Handle<Value> Device::GetTotalMem(Local<String> property, const AccessorInfo &in
   Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
   size_t totalGlobalMem;
   cuDeviceTotalMem(&totalGlobalMem, pdevice->m_device);
-  
+
   return scope.Close(Number::New(totalGlobalMem));
 }

@@ -17,7 +17,7 @@ void Mem::Initialize(Handle<Object> target) {
   // Mem objects can only be created by allocation functions
   NODE_SET_METHOD(target, "memAlloc", Mem::Alloc);
   NODE_SET_METHOD(target, "memAllocPitch", Mem::AllocPitch);
-  
+
   constructor_template->InstanceTemplate()->SetAccessor(String::New("devicePtr"), Mem::GetDevicePtr);
 
   NODE_SET_PROTOTYPE_METHOD(constructor_template, "free", Mem::Free);

@@ -7,26 +7,26 @@
 
 namespace NodeCuda {
 
-class Function : public ObjectWrap {
-public:
-  static void Initialize(Handle<Object> target);
+  class Function : public ObjectWrap {
+    public:
+      static void Initialize(Handle<Object> target);
 
-protected:
-  static Persistent<FunctionTemplate> constructor_template;
+    protected:
+      static Persistent<FunctionTemplate> constructor_template;
 
-  static Handle<Value> LaunchKernel(const Arguments& args);
+      static Handle<Value> LaunchKernel(const Arguments& args);
 
-  Function() : ObjectWrap(), m_function(0) {}
+      Function() : ObjectWrap(), m_function(0) {}
 
-  ~Function() {}
+      ~Function() {}
 
-private:
-  static Handle<Value> New(const Arguments& args);
+    private:
+      static Handle<Value> New(const Arguments& args);
 
-  CUfunction m_function;
+      CUfunction m_function;
 
-  friend Handle<Value> Module::GetFunction(const Arguments&);
-};
+      friend Handle<Value> Module::GetFunction(const Arguments&);
+  };
 
 }
 

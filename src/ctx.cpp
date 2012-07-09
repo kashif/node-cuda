@@ -7,7 +7,7 @@ Persistent<FunctionTemplate> Ctx::constructor_template;
 
 void Ctx::Initialize(Handle<Object> target) {
   HandleScope scope;
-  
+
   Local<FunctionTemplate> t = FunctionTemplate::New(Ctx::New);
   constructor_template = Persistent<FunctionTemplate>::New(t);
   constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
@@ -26,13 +26,13 @@ void Ctx::Initialize(Handle<Object> target) {
 
 Handle<Value> Ctx::New(const Arguments& args) {
   HandleScope scope;
-  
+
   Ctx *pctx = new Ctx();
   pctx->Wrap(args.This());
-  
+
   unsigned int flags = args[0]->Uint32Value();
   pctx->m_device = ObjectWrap::Unwrap<Device>(args[1]->ToObject())->m_device;
-  
+
   cuCtxCreate(&(pctx->m_context), flags, pctx->m_device);
 
   return args.This();
@@ -121,10 +121,10 @@ void Ctx::EIO_Synchronize(eio_req *req) {
 
   params->error = cuCtxPushCurrent(params->ctx->m_context);
   if (params->error) return;
-  
+
   params->error = cuCtxSynchronize();
   if (params->error) return;
-  
+
   params->error = cuCtxPopCurrent(NULL);
 }
 
@@ -132,7 +132,7 @@ int Ctx::EIO_AfterSynchronize(eio_req *req) {
   HandleScope scope;
   SynchronizeParams *params = static_cast<SynchronizeParams*>(req->data);
   ev_unref(EV_DEFAULT_UC);
-  
+
   params->ctx->Unref();
   params->ctx->sync_in_progress = false;
 
@@ -158,6 +158,6 @@ Handle<Value> Ctx::GetApiVersion(Local<String> property, const AccessorInfo &inf
 
   unsigned int version;
   CUresult error = cuCtxGetApiVersion(pctx->m_context, &version);
-  
+
   return scope.Close(Number::New(version));
 }

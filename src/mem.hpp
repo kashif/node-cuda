@@ -7,32 +7,32 @@
 
 namespace NodeCuda {
 
-class Mem : public ObjectWrap {
-public:
-  static void Initialize(Handle<Object> target);
+  class Mem : public ObjectWrap {
+    public:
+      static void Initialize(Handle<Object> target);
 
-protected:
-  static Persistent<FunctionTemplate> constructor_template;
+    protected:
+      static Persistent<FunctionTemplate> constructor_template;
 
-  static Handle<Value> Alloc(const Arguments& args);
-  static Handle<Value> AllocPitch(const Arguments& args);
-  static Handle<Value> Free(const Arguments& args);
-  static Handle<Value> CopyHtoD(const Arguments& args);
-  static Handle<Value> CopyDtoH(const Arguments& args);
+      static Handle<Value> Alloc(const Arguments& args);
+      static Handle<Value> AllocPitch(const Arguments& args);
+      static Handle<Value> Free(const Arguments& args);
+      static Handle<Value> CopyHtoD(const Arguments& args);
+      static Handle<Value> CopyDtoH(const Arguments& args);
 
-  static Handle<Value> GetDevicePtr(Local<String> property, const AccessorInfo &info);
-  
-  Mem() : ObjectWrap(), m_devicePtr(0) {}
+      static Handle<Value> GetDevicePtr(Local<String> property, const AccessorInfo &info);
 
-  ~Mem() {}
+      Mem() : ObjectWrap(), m_devicePtr(0) {}
 
-private:
-  static Handle<Value> New(const Arguments& args);
+      ~Mem() {}
 
-  CUdeviceptr m_devicePtr;
+    private:
+      static Handle<Value> New(const Arguments& args);
 
-  friend class NodeCuda::Function;
-};
+      CUdeviceptr m_devicePtr;
+
+      friend class NodeCuda::Function;
+  };
 
 }
 
