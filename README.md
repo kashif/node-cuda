@@ -12,7 +12,7 @@ To obtain and build the bindings:
 
     git clone git://github.com/kashif/node-cuda.git
     cd node-cuda
-    node-waf configure build
+    node-gyp configure build
 
 or install it via [npm](http://npmjs.org/):
 

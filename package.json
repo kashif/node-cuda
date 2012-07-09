@@ -4,7 +4,8 @@
   "description": "NVIDIA CUDA™ bindings for Node.js",
   "keywords": [
     "NVIDIA",
-    "CUDA"
+    "CUDA",
+    "GPU"
   ],
   "homepage": "http://github.com/kashif/node-cuda",
   "author": "Kashif Rasul <kashif@nomad-labs.com> (http://hpc.nomad-labs.com)",
@@ -16,6 +17,7 @@
   ],
   "main": "./index",
   "scripts": {
+    "preinstall": "node-gyp clean || true; node-gyp configure build",
     "test": "node test/test.js"
   },
   "repository": {
