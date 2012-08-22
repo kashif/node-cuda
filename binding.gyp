@@ -10,10 +10,24 @@
         "src/mem.cpp",
         "src/module.cpp"
         ],
-      "libraries": [
-        "-L/usr/local/cuda/lib -lcuda"
+      'conditions': [
+        [ 'OS=="mac"', {
+          "link_settings": {
+            "libraries": [
+              '$(SDKROOT)/System/Library/Frameworks/CUDA.framework',
+            ]
+          }
+        }],
+        [ 'OS=="linux"', {
+          "link_settings": {
+            "libraries": [
+              '-lcuda',
+            ]
+          }
+        }]
       ],
       "include_dirs": [
+        "/usr/local/cuda-5.0/include",
         "/usr/local/cuda/include"
       ],
     }
