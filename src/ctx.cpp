@@ -99,13 +99,20 @@ Handle<Value> Ctx::Synchronize(const Arguments& args) {
     params->ctx = ctx;
     params->cb = Persistent<Function>::New(cb);
 
-    ctx->Ref();
-    ctx->sync_in_progress = true;
-
     cuCtxPopCurrent(NULL);
 
-    eio_custom(EIO_Synchronize, EIO_PRI_DEFAULT, EIO_AfterSynchronize, params);
-    ev_ref(EV_DEFAULT_UC);
+    // build up the work request
+    uv_work_t* work_req = new uv_work_t;
+    work_req->data = params;
+
+    uv_queue_work(uv_default_loop(),
+        work_req,
+        Process,
+        After);
+    uv_ref((uv_handle_t*) &work_req);
+
+    ctx->Ref();
+    ctx->sync_in_progress = true;
 
     return Undefined();
 
@@ -116,8 +123,8 @@ Handle<Value> Ctx::Synchronize(const Arguments& args) {
   }
 }
 
-void Ctx::EIO_Synchronize(eio_req *req) {
-  SynchronizeParams *params = static_cast<SynchronizeParams*>(req->data);
+void Ctx::Process(uv_work_t* work_req) {
+  SynchronizeParams *params = static_cast<SynchronizeParams*>(work_req->data);
 
   params->error = cuCtxPushCurrent(params->ctx->m_context);
   if (params->error) return;
@@ -128,10 +135,9 @@ void Ctx::EIO_Synchronize(eio_req *req) {
   params->error = cuCtxPopCurrent(NULL);
 }
 
-int Ctx::EIO_AfterSynchronize(eio_req *req) {
+void Ctx::After(uv_work_t* work_req) {
   HandleScope scope;
-  SynchronizeParams *params = static_cast<SynchronizeParams*>(req->data);
-  ev_unref(EV_DEFAULT_UC);
+  SynchronizeParams *params = static_cast<SynchronizeParams*>(work_req->data);
 
   params->ctx->Unref();
   params->ctx->sync_in_progress = false;
@@ -146,10 +152,8 @@ int Ctx::EIO_AfterSynchronize(eio_req *req) {
   if (try_catch.HasCaught()) FatalException(try_catch);
 
   params->cb.Dispose();
-
+  uv_unref((uv_handle_t*) work_req);
   delete params;
-
-  return 0;
 }
 
 Handle<Value> Ctx::GetApiVersion(Local<String> property, const AccessorInfo &info) {
