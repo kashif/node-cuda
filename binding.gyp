@@ -24,12 +24,33 @@
               '-lcuda',
             ]
           }
+        }],
+        [ 'OS=="win"', {
+          'conditions': [
+            ['target_arch=="x64"',
+              {
+                'variables': { 'arch': 'x64' }
+              }, {
+                'variables': { 'arch': 'Win32' }
+              }
+            ],
+          ],
+          'variables': {
+            'cuda_root%': '$(CUDA_PATH)'
+          },
+          'libraries': [ 
+            '-l<(cuda_root)/lib/<(arch)/cuda.lib',
+          ],
+          "include_dirs": [
+            "<(cuda_root)/include",
+          ],
+        }, {
+          "include_dirs": [
+            "/usr/local/cuda-5.0/include",
+            "/usr/local/cuda/include"
+          ],
         }]
-      ],
-      "include_dirs": [
-        "/usr/local/cuda-5.0/include",
-        "/usr/local/cuda/include"
-      ],
+      ]
     }
   ]
 }
