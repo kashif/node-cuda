@@ -135,7 +135,8 @@ void Ctx::Process(uv_work_t* work_req) {
   params->error = cuCtxPopCurrent(NULL);
 }
 
-void Ctx::After(uv_work_t* work_req) {
+void Ctx::After(uv_work_t* work_req, int status) {
+  assert(status == 0);
   HandleScope scope;
   SynchronizeParams *params = static_cast<SynchronizeParams*>(work_req->data);
 

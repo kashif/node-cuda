@@ -36,7 +36,7 @@ namespace NodeCuda {
       uv_work_t work_req_;
 
       static void Process(uv_work_t* work_req);
-      static void After(uv_work_t* work_req);
+      static void After(uv_work_t* work_req, int status);
   };
 
 }
