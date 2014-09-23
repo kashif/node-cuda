@@ -15,17 +15,19 @@
       "email": "jitudas@gmail.com"
     }
   ],
-  "main": "./index",
+  "main": "cuda.js",
+  "directories": {
+    "src": "src",
+    "test": "test"
+  },
   "scripts": {
     "preinstall": "node-gyp clean || true; node-gyp configure build",
+    "install": "node-gyp rebuild",
     "test": "node test/test.js"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/kashif/node-cuda.git"
   },
-  "license": "MIT",
-  "engines": {
-    "node": ">=0.6.0"
-  }
+  "license": "MIT"
 }

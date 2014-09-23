@@ -1,5 +1,5 @@
 var Buffer = require('buffer').Buffer;
-var cu = require(__dirname + '/../index');
+var cu = require('../cuda');
 
 //cuDriverGetVersion
 //cuDeviceGetCount
@@ -75,4 +75,3 @@ var error = cuCtx.synchronize(function(error) {
     error = cuCtx.destroy();
     console.log("Context destroyed with error code: " + error);
 });
-

@@ -2,7 +2,7 @@
   "targets": [
     {
       "target_name": "cuda",
-      "sources": [ 
+      "sources": [
         "src/bindings.cpp",
         "src/ctx.cpp",
         "src/device.cpp",
@@ -12,18 +12,14 @@
         ],
       'conditions': [
         [ 'OS=="mac"', {
-          "link_settings": {
-            "libraries": [
-              '$(SDKROOT)/System/Library/Frameworks/CUDA.framework',
-            ]
-          }
+          'libraries': ['-framework CUDA'],
+          'include_dirs': ['/usr/local/include'],
+          'library_dirs': ['/usr/local/lib']
         }],
         [ 'OS=="linux"', {
-          "link_settings": {
-            "libraries": [
-              '-lcuda',
-            ]
-          }
+          'libraries': ['-lcuda'],
+          'include_dirs': ['/usr/local/include'],
+          'library_dirs': ['/usr/local/lib']
         }],
         [ 'OS=="win"', {
           'conditions': [
@@ -38,7 +34,7 @@
           'variables': {
             'cuda_root%': '$(CUDA_PATH)'
           },
-          'libraries': [ 
+          'libraries': [
             '-l<(cuda_root)/lib/<(arch)/cuda.lib',
           ],
           "include_dirs": [
