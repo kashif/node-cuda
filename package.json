@@ -29,5 +29,9 @@
     "type": "git",
     "url": "git://github.com/kashif/node-cuda.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^1.7.0",
+    "node-gyp": "^1.0.2"
+  }
 }
