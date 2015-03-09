@@ -4,11 +4,11 @@
       "target_name": "cuda",
       "sources": [
         "src/bindings.cpp",
-        "src/ctx.cpp",
+        # "src/ctx.cpp",
         "src/device.cpp",
-        "src/function.cpp",
-        "src/mem.cpp",
-        "src/module.cpp"
+        # "src/function.cpp",
+        # "src/mem.cpp",
+        # "src/module.cpp"
         ],
       'conditions': [
         [ 'OS=="mac"', {
@@ -42,6 +42,7 @@
           ],
         }, {
           "include_dirs": [
+            "<!(node -e \"require('nan')\")",
             "/usr/local/cuda-5.0/include",
             "/usr/local/cuda/include"
           ],
