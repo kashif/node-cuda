@@ -2,74 +2,64 @@
 
 using namespace NodeCuda;
 
-Persistent<FunctionTemplate> Device::constructor_template;
+Nan::Persistent<v8::Function> Device::constructor;
 
-void Device::Initialize(Handle<Object> target) {
-  HandleScope scope;
+NAN_MODULE_INIT(Device::Init) {
+  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(Device::New);
+  tpl->SetClassName(Nan::New("Device").ToLocalChecked());
+  tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-  Local<FunctionTemplate> t = FunctionTemplate::New(Device::New);
-  constructor_template = Persistent<FunctionTemplate>::New(t);
-  constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
-  constructor_template->SetClassName(String::NewSymbol("CudaDevice"));
+  Nan::SetPrototypeMethod(tpl, "name", Device::GetName);
+  Nan::SetPrototypeMethod(tpl, "totalMem", Device::GetTotalMem);
+  Nan::SetPrototypeMethod(tpl, "computeCapability", Device::GetComputeCapability);
 
-  constructor_template->InstanceTemplate()->SetAccessor(String::New("name"), Device::GetName);
-  constructor_template->InstanceTemplate()->SetAccessor(String::New("totalMem"), Device::GetTotalMem);
-  constructor_template->InstanceTemplate()->SetAccessor(String::New("computeCapability"), Device::GetComputeCapability);
-
-  target->Set(String::NewSymbol("Device"), constructor_template->GetFunction());
+  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
+  Nan::Set(target, Nan::New("Device").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
 }
 
-static Handle<Value> GetName_(CUdevice device) {
-  HandleScope scope;
-  char deviceName[256];
-
-  cuDeviceGetName(deviceName, 256, device);
-  Local<String> result = String::New(deviceName);
-  return scope.Close(result);
-}
-
-Handle<Value> Device::New(const Arguments& args) {
-  HandleScope scope;
-  Local<Object> result = args.This();
-  int ordinal = args[0]->IntegerValue();
-
-  if (!constructor_template->HasInstance(result)) {
-    result = constructor_template->InstanceTemplate()->NewInstance();
+NAN_METHOD(Device::New) {
+  if (info.IsConstructCall()) {
+    int ordinal = info[0]->IsUndefined() ? 0 : Nan::To<int>(info[0]).FromJust();
+    Device *pdevice = new Device();
+    cuDeviceGet(&(pdevice->m_device), ordinal);
+    pdevice->Wrap(info.This());
+    info.GetReturnValue().Set(info.This());
+  } else {
+    const int argc = 1;
+    v8::Local<v8::Value> argv[argc] = {info[0]};
+    v8::Local<v8::Function> cons = Nan::New(constructor);
+    info.GetReturnValue().Set(cons->NewInstance(argc, argv));
   }
-
-  Device *pdevice = new Device();
-  cuDeviceGet(&(pdevice->m_device), ordinal);
-
-  pdevice->Wrap(result);
-  return scope.Close(result);
 }
 
-Handle<Value> Device::GetComputeCapability(Local<String> property, const AccessorInfo &info) {
-  HandleScope scope;
-
-  Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
+NAN_METHOD(Device::GetComputeCapability) {
   int major = 0, minor = 0;
+
+  Device *pdevice = Nan::ObjectWrap::Unwrap<Device>(info.This());
   cuDeviceComputeCapability(&major, &minor, pdevice->m_device);
 
-  Local<Object> result = Object::New();
-  result->Set(String::New("major"), Integer::New(major));
-  result->Set(String::New("minor"), Integer::New(minor));
-  return scope.Close(result);
+  v8::Local<v8::Object> result = Nan::New<v8::Object>();
+
+  Nan::Set(result, Nan::New("major").ToLocalChecked(), Nan::New(major));
+  Nan::Set(result, Nan::New("minor").ToLocalChecked(), Nan::New(minor));
+  info.GetReturnValue().Set(result);
 }
 
-Handle<Value> Device::GetName(Local<String> property, const AccessorInfo &info) {
-  HandleScope scope;
+NAN_METHOD(Device::GetName) {
+  char deviceName[256];
 
-  Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
-  return GetName_(pdevice->m_device);
+  Device *pdevice = Nan::ObjectWrap::Unwrap<Device>(info.This());
+  cuDeviceGetName(deviceName, 256, pdevice->m_device);
+
+  info.GetReturnValue().Set(Nan::New(deviceName).ToLocalChecked());
 }
 
-Handle<Value> Device::GetTotalMem(Local<String> property, const AccessorInfo &info) {
-  HandleScope scope;
-
-  Device *pdevice = ObjectWrap::Unwrap<Device>(info.Holder());
+NAN_METHOD(Device::GetTotalMem) {
   size_t totalGlobalMem;
+
+  Device *pdevice = Nan::ObjectWrap::Unwrap<Device>(info.This());
   cuDeviceTotalMem(&totalGlobalMem, pdevice->m_device);
 
-  return scope.Close(Number::New(totalGlobalMem));
+  v8::Local<v8::Number> result = Nan::New((double)totalGlobalMem);
+  info.GetReturnValue().Set(result);
 }

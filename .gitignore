@@ -2,3 +2,4 @@ build
 .lock-wscript
 .waf*
 *.node
+node_modules

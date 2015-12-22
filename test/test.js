@@ -2,17 +2,17 @@ var Buffer = require('buffer').Buffer;
 var cu = require('../cuda');
 
 //cuDriverGetVersion
+console.log("Driver Version:", cu.getDriverVersion());
 //cuDeviceGetCount
-console.log("Node-cuda exports:", cu);
+console.log("Device count:", cu.getDeviceCount());
 
-for (var i = 0; i < cu.deviceCount; i++) {
+for (var i = 0; i < cu.getDeviceCount(); i++) {
     //cuDeviceGet
     var cuDevice = new cu.Device(i);
 
-    //cuDeviceComputeCapability
-    //cuDeviceGetName
-    //cuDeviceTotalMem
-    console.log("Device " + i + ":", cuDevice);
+    console.log("Device " + i + ":", cuDevice.name());
+    console.log("Total Memory Device " + i + ":", cuDevice.totalMem());
+    console.log("ComputeCapability Device " + i + ":", cuDevice.computeCapability());
 }
 
 //cuCtxCreate

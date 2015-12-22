@@ -1,15 +1,14 @@
 #ifndef CTX_HPP
 #define CTX_HPP
 
-#include <cuda.h>
 #include "bindings.hpp"
-#include "device.hpp"
+//#include "device.hpp"
 
 namespace NodeCuda {
 
-  class Ctx : public ObjectWrap {
+  class Ctx : public Nan::ObjectWrap {
     public:
-      static void Initialize(Handle<Object> target);
+      static NAN_MODULE_INIT(Init);
 
     protected:
       static Persistent<FunctionTemplate> constructor_template;

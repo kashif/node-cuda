@@ -21,9 +21,16 @@
     "test": "test"
   },
   "scripts": {
-    "preinstall": "node-gyp clean || true; node-gyp configure build",
-    "install": "node-gyp rebuild",
-    "test": "node test/test.js"
+    "configure": "node-gyp configure",
+    "build": "node-gyp build",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "nan": "^2.1.0",
+    "node-gyp": "^3.2.1"
   },
   "repository": {
     "type": "git",

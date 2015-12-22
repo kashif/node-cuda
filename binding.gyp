@@ -4,12 +4,15 @@
       "target_name": "cuda",
       "sources": [
         "src/bindings.cpp",
-        "src/ctx.cpp",
+        # "src/ctx.cpp",
         "src/device.cpp",
-        "src/function.cpp",
-        "src/mem.cpp",
-        "src/module.cpp"
+        # "src/function.cpp",
+        # "src/mem.cpp",
+        # "src/module.cpp"
         ],
+      "include_dirs" : [
+        "<!(node -e \"require('nan')\")"
+      ],
       'conditions': [
         [ 'OS=="mac"', {
           'libraries': ['-framework CUDA'],
@@ -19,7 +22,7 @@
         [ 'OS=="linux"', {
           'libraries': ['-lcuda'],
           'include_dirs': ['/usr/local/include'],
-          'library_dirs': ['/usr/local/lib']
+          'library_dirs': ['/usr/local/lib64','/usr/local/lib']
         }],
         [ 'OS=="win"', {
           'conditions': [
@@ -42,7 +45,6 @@
           ],
         }, {
           "include_dirs": [
-            "/usr/local/cuda-5.0/include",
             "/usr/local/cuda/include"
           ],
         }]
